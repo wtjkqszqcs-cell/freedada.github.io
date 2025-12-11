@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Мой билет</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+    <div class="main-container">
+        <div class="root">
+            <div class="groups">
+                <span class="my-ticket">Мой билет</span>
+                <div class="image"></div>
+                <div class="image-1"></div>
+            </div>
+            <div class="image-2">
+                <div class="groups-3">
+                    <div class="groups-4">
+                        <div class="background">
+                            <!-- Добавляем id для динамического обновления -->
+                            <span id="current-time" class="time">14:34</span>
+                            <span id="current-date" class="date">6 декабря</span>
+                            <div class="image-5"></div>
+                        </div>
+                    </div>
+                    <div class="background-6">
+                        <div class="groups-7">
+                            <div class="flex-row">
+                                <div class="background-8"></div>
+                                <!-- Добавляем id для секунд и минут -->
+                                <span id="countdown-seconds" class="number-20">20</span>
+                                <span id="countdown-minutes" class="number-44">44</span>
+                            </div>
+                            <div class="flex-row-d">
+                                <span class="minutes">Минуты</span>
+                                <span class="seconds">Секунды</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="groups-9">
+                        <div class="background-a"></div>
+                        <div class="groups-b">
+                            <div class="flex-row-bc">
+                                <div class="ticket">
+                                    <span class="ticket-info">1 билет - </span>
+                                    <span class="price">39 </span>
+                                    <span class="currency">₽</span>
+                                </div>
+                                <div class="button">
+                                    <div class="background-c">
+                                        <span class="travel">Проезд</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="mpv-vpopat">МПВ "ВПОПАТ №1"</span>
+                            <div class="image-d"></div>
+                        </div>
+                        <div class="groups-e">
+                            <!-- Добавляем contenteditable и id для редактирования -->
+                            <span id="editable-text" class="ab-531-25" contenteditable="true">AB 531 25</span>
+                            <span id="editable-number" class="no-95" contenteditable="true">№95</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="groups-f">
+                    <div class="button-10">
+                        <div class="background-11">
+                            <span class="buy-ticket">КУПИТЬ БИЛЕТ</span>
+                        </div>
+                    </div>
+                    <div class="button-12">
+                        <div class="background-13">
+                            <span class="present">предъявить</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="background-14">
+                <div class="groups-15">
+                    <div class="groups-16">
+                        <div class="image-17"></div>
+                        <span class="history">История</span>
+                    </div>
+                    <div class="groups-18">
+                        <div class="image-19"></div>
+                        <span class="my-ticket-1a">Мой билет</span>
+                    </div>
+                    <div class="groups-1b">
+                        <div class="image-1c"></div>
+                        <span class="payment">Оплата</span>
+                    </div>
+                    <div class="groups-1d">
+                        <div class="image-1e"></div>
+                        <span class="menu">Меню</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="background-1f"></div>
+    </div>
+
+    <script>
+        // 1. Функция для обновления реального времени и даты
+        function updateRealTime() {
+            const now = new Date();
+            
+            // Обновляем время (формат: часы:минуты)
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}`;
+            
+            // Обновляем дату (формат: число месяц)
+            const day = now.getDate();
+            const monthNames = [
+                'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+            ];
+            const month = monthNames[now.getMonth()];
+            document.getElementById('current-date').textContent = `${day} ${month}`;
+        }
+        
+        // 2. Функция для обратного отсчета (59:00 -> 00:00)
+        let countdownMinutes = 59;
+        let countdownSeconds = 0;
+        
+        function updateCountdown() {
+            const minutesElement = document.getElementById('countdown-minutes');
+            const secondsElement = document.getElementById('countdown-seconds');
+            
+            // Обновляем отображение
+            minutesElement.textContent = countdownMinutes.toString().padStart(2, '0');
+            secondsElement.textContent = countdownSeconds.toString().padStart(2, '0');
+            
+            // Логика отсчета
+            if (countdownSeconds === 0) {
+                if (countdownMinutes === 0) {
+                    // Сбрасываем на 59:00
+                    countdownMinutes = 59;
+                    countdownSeconds = 0;
+                } else {
+                    countdownMinutes--;
+                    countdownSeconds = 59;
+                }
+            } else {
+                countdownSeconds--;
+            }
+        }
+        
+        // 3. Функция для сохранения редактируемого текста
+        function setupEditableFields() {
+            const editableText = document.getElementById('editable-text');
+            const editableNumber = document.getElementById('editable-number');
+            
+            // Сохраняем изменения в localStorage
+            function saveToLocalStorage(element, key) {
+                element.addEventListener('blur', function() {
+                    localStorage.setItem(key, this.textContent);
+                });
+                
+                // Загружаем сохраненные данные
+                const savedValue = localStorage.getItem(key);
+                if (savedValue) {
+                    element.textContent = savedValue;
+                }
+            }
+            
+            // Настраиваем сохранение для обоих полей
+            saveToLocalStorage(editableText, 'ticket-text');
+            saveToLocalStorage(editableNumber, 'ticket-number');
+            
+            // Запрещаем пустые поля
+            editableText.addEventListener('blur', function() {
+                if (!this.textContent.trim()) {
+                    this.textContent = 'AB 531 25';
+                }
+            });
+            
+            editableNumber.addEventListener('blur', function() {
+                if (!this.textContent.trim()) {
+                    this.textContent = '№95';
+                }
+            });
+        }
+        
+        // 4. Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Запускаем реальное время сразу и каждую минуту
+            updateRealTime();
+            setInterval(updateRealTime, 60000); // Обновляем каждую минуту
+            
+            // Запускаем обратный отсчет
+            updateCountdown(); // Сразу показываем 59:00
+            setInterval(updateCountdown, 1000); // Обновляем каждую секунду
+            
+            // Настраиваем редактируемые поля
+            setupEditableFields();
+            
+            // Добавляем адаптацию для мобильных
+            adjustForMobile();
+        });
+        
+        // 5. Простая адаптация для мобильных устройств
+        function adjustForMobile() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Добавляем стили для лучшего отображения на мобильных
+                document.body.style.overflowX = 'hidden';
+                document.body.style.width = '100%';
+                
+                // Немного уменьшаем шрифты для мобильных
+                const style = document.createElement('style');
+                style.textContent = `
+                    @media (max-width: 768px) {
+                        .main-container {
+                            width: 100% !important;
+                            max-width: 100% !important;
+                            height: auto !important;
+                            margin: 0 !important;
+                            padding: 10px !important;
+                        }
+                        
+                        .time, .date {
+                            font-size: 32px !important;
+                        }
+                        
+                        .number-44, .number-20 {
+                            font-size: 60px !important;
+                        }
+                        
+                        .ab-531-25 {
+                            font-size: 48px !important;
+                        }
+                        
+                        .no-95 {
+                            font-size: 36px !important;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+    </script>
+</body>
+</html>
